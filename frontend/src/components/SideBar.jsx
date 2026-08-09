@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Coins, LogOut, MessageSquare, PanelLeftIcon, PenSquare, Plus, User } from "lucide-react"
+import { CloudCog, Coins, LogOut, MessageSquare, PanelLeftIcon, PanelRight, PenSquare, Plus, User } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { getConversations } from '../features/getConversations'
 import { addConversation, setConversations, setSelectedConversation } from '../redux/conversationSlice'
@@ -28,9 +28,76 @@ function SideBar() {
     dispatch(addConversation(data))
   }
 
+  if(collapsed) {
+    return(
+      <>
+        <div className='hidden lg:flex flex-col items-center w-[56px] h-screen bg-[#0d0f14] border-r border-white/[0.06] py-4 gap-1 shrink-0'>
+          <button className='flex items-center justify-center w-9 h-9 mb-1 rounded-xl text-slate-500 bg-transparent 
+            hover:text-slate-100 hover:bg-white/[0.05] transition-colors duration-150 border-none cursor-pointer'
+            onClick={()=>setCollapsed(false)}
+            >
+            <PanelRight />
+          </button>
+
+          <button className='flex items-center justify-center w-9 h-9 mb-1 rounded-xl text-slate-500 bg-transparent 
+            hover:text-slate-100 hover:bg-white/[0.05] transition-colors duration-150 border-none cursor-pointer'
+            onClick={handleCreateConversation}
+            >
+            <Plus size={17} />
+          </button>
+
+          <div className='flex-1 overflow-y-auto px-2.5 pb-2 [scrollbar-width:none] [&::webkit-scrollbar]:hidden pt-5'>
+            {
+              conversations.map((conv,i)=>{
+                const isActive=selectedConversation?._id===conv._id
+                return(
+                  <div className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border transition-colors duration-150 
+                    ${isActive ? "bg-indigo-500/10 border-indigo-500/[0.18]" : "bg-transparent border-transparent"}`}
+                    onClick={()=>dispatch(setSelectedConversation(conv))}
+                    key={i}
+                    >
+                    <div className={`flex items-center justify-center shrink-0 w-[20px] h-[20px] rounded-lg transition-colors duration-150 
+                      ${isActive ? "bg-indigo-500/15 text-indigo-400" : "bg-white/[0.05] text-slate-500"}`}>
+                      <MessageSquare size={13} />
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div>
+          
+          <div className='py-3.5'>
+            <div className='mx-2.5 h-110px bg-white' />
+
+            <div className='relative shrink-0'>
+              {
+                (userData?.avatar && !imageError)
+                ? (
+                  <img 
+                    className='w-9 h-9 object-cover border-2 rounded-[10px] border-indigo-500/25'
+                    src={userData?.avatar} 
+                    alt={"image"} 
+                    onError={()=>setImageError(true)}
+                  />
+                )
+                : (
+                  <div className='w-9 h-9 rounded-[10px] bg-white/[0.06] flex items-center justify-center'>
+                    <User size={15} className='text-slate-400' />
+                  </div>
+                )
+              }
+            </div>
+          </div>
+          
+
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
-      <div className='fixed lg:static inset-y-0 left-0 z-50 w-[270px] h-screen shrink-0 bg-[#0d0f14] border-r border-white/[0.06]'>
+      <div className='fixed lg:static inset-y-0 left-0 pt-4 z-50 w-[270px] h-screen shrink-0 bg-[#0d0f14] border-r border-white/[0.06]'>
         <div className='flex flex-col h-full'>
           <div className='flex items-center gap-2.5 px-4 border-b border-white/[0.06]'>
             <div className='hidden lg:flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 
@@ -79,7 +146,7 @@ function SideBar() {
           <div className='flex-1 overflow-y-auto px-2.5 pb-2 [scrollbar-width:none] [&::webkit-scrollbar]:hidden '>
             {
               conversations.map((conv,i)=>{
-                const isActive=selectedConversation?._id==conversations?._id
+                const isActive=selectedConversation?._id===conv?._id
                 return(
                   <div className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border transition-colors duration-150 
                     ${isActive ? "bg-indigo-500/10 border-indigo-500/[0.18]" : "bg-transparent border-transparent"}`}
@@ -87,7 +154,7 @@ function SideBar() {
                     key={i}
                     >
                     <div className={`flex items-center justify-center shrink-0 w-[28px] h-[28px] rounded-lg transition-colors duration-150 
-                      ${isActive ? "bg-indigo-500/15 text-indigo-400" : "bg-white/[0.5] text-slate-500"}`}>
+                      ${isActive ? "bg-indigo-500/15 text-indigo-400" : "bg-white/[0.05] text-slate-500"}`}>
                       <MessageSquare size={13} />
                     </div>
                     <span className={`text-[13px] font-medium truncate ${isActive ? "text-slate-100" : "text-slate-300"}`}>
@@ -109,7 +176,7 @@ function SideBar() {
                   transition-colors duration-150'>
                   <div className='relative shrink-0'>
                     {
-                      (userData?.avatar || !imageError)
+                      (userData?.avatar && !imageError)
                       ? (
                         <img 
                           className='w-9 h-9 object-cover border-2 rounded-[10px] border-indigo-500/25'
