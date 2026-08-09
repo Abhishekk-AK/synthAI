@@ -19,6 +19,11 @@ export const agent=async (req, res) => {
 
         //returned state by graph
         const response=result.aiResponse
+        await axios.post(`${process.env.CHAT_SERVICE_URL}/save-message`, {
+            conversationId,
+            role:"assistant",
+            content:response
+        })
 
         //response sent to frontend
         return res.status(200).json(response)
