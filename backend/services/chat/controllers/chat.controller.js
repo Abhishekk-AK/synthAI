@@ -71,10 +71,10 @@ export const saveMessage=async (req, res) => {
 //get all messages of a particular conversation
 export const getMessages=async (req, res) => {
     try {
-        const {conversationId}=req.params.conversationId
+        const conversationId=req.params.conversationId
         const messages=await Message.find({
             conversationId:conversationId
-        }).sort({createdAt:-1})
+        })
 
         return res.status(200).json(messages)
 

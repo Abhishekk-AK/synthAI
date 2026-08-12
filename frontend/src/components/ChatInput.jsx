@@ -1,19 +1,35 @@
 import { Mic, Paperclip, Send } from 'lucide-react'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import sendMessage from '../features/sendMessage'
+import { createConversation } from '../features/createConversation'
+import { addConversation, setSelectedConversation } from '../redux/conversationSlice'
+import { addMessage } from '../redux/messageSlice'
 
 function ChatInput() {
   const [value,setValue]=useState("")
   const {selectedConversation}=useSelector(state=>state.conversation)
+  const dispatch=useDispatch()
+
+  const handleCreateConversation=async () => {
+    const data=await createConversation()
+    dispatch(addConversation(data))
+    dispatch(setSelectedConversation(data))
+    return data._id
+  }
 
   const handleSendMessage=async () => {
+    const convId=selectedConversation ? selectedConversation?._id : handleCreateConversation()
     const payload={
       prompt:value.trim(),
-      conversationId:selectedConversation?._id
+      conversationId:convId
     }
     console.log(payload)
+
+    dispatch(addMessage({role:"user",content:value.trim()}))
+    setValue("")
     const data=await sendMessage(payload)
+    dispatch(addMessage({role:"assistant",content:data}))
     console.log(data)
   }
 
@@ -25,7 +41,7 @@ function ChatInput() {
             placeholder='Ask Anything...'
             rows={3}
             onChange={(e)=>setValue(e.target.value)}
-            value={value.trim()}
+            value={value}
             className='w-full bg-transparent outline-none resize-none text-slate-200 placeholder:text-slate-600 
               text-[14px] leading-relaxed [scrollbar-width:none] [&::-webkit-scroll]:hidden disabled:opacity-50'
           />
@@ -40,11 +56,11 @@ function ChatInput() {
                 <Mic size={16} />
               </button>
             </div>
-            <div>
+            <div className='flex items-center justify-center'>
               <button 
                 disabled={!value}
                 onClick={handleSendMessage}
-                className={`flex items-center justify-center w-8 h-8 rounded-lg border-none translate-full duration-150 cursor-pointer
+                className={`flex items-center justify-center w-8 h-8 rounded-lg border-none transition-colors duration-150 cursor-pointer
                   ${value.trim() ? "bg-linear-to-br from-indigo-500 to-violet-700 hover:opacity-90 text-white" 
                   : "bg-white/[0.05] text-slate-600 cursor-not-allowed"}`}>
                 <Send size={15} />
