@@ -1,13 +1,11 @@
 import axios from "axios"
 import { graph } from "../graph/graph.js"
 import { addMessageInMemory } from "../config/memory.js"
+import redis from "../../../shared/redis/redis.js"
 
 export const agent=async (req, res) => {
     try {
         const {prompt, conversationId}=req.body
-
-        //add mesg in redis for memory
-        await addMessageInMemory(conversationId,"user",prompt)
 
         //saving user message in db
         await axios.post(`${process.env.CHAT_SERVICE_URL}/save-message`, {
@@ -25,8 +23,11 @@ export const agent=async (req, res) => {
         //returned state by graph
         const response=result.aiResponse
 
+        //add mesg in redis for memory
+        await addMessageInMemory(conversationId,"user",prompt)
+
         await addMessageInMemory(conversationId,"assistant",response)
-        
+
         await axios.post(`${process.env.CHAT_SERVICE_URL}/save-message`, {
             conversationId,
             role:"assistant",
