@@ -5,7 +5,7 @@ import redis from "../../../shared/redis/redis.js"
 
 export const agent=async (req, res) => {
     try {
-        const {prompt, conversationId}=req.body
+        const {prompt, conversationId, agent}=req.body
 
         //saving user message in db
         await axios.post(`${process.env.CHAT_SERVICE_URL}/save-message`, {
@@ -18,6 +18,7 @@ export const agent=async (req, res) => {
         const result=await graph.invoke({
             prompt,
             conversationId,
+            agent,
         })
 
         //returned state by graph
