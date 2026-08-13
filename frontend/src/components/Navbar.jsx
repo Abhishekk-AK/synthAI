@@ -13,7 +13,10 @@ function Navbar() {
                         <MessagesSquare size={13} className='text-indigo-400' />
                     </div>
                     <div className='text-[14px] font-semibold text-slate-100 tracking-tight'>
-                        {selectedConversation?.title || "New Chat"}
+                        {selectedConversation?.title?.length > 30 
+                            ? selectedConversation.title.trim().substring(0, 30).replace(/\s+\S*$/, '') + ' . . .' 
+                            : selectedConversation?.title 
+                        || "New Chat"}
                     </div>
                     <div className='text-[10px] font-medium text-slate-600 bg-white/[0.04] border border-white/[0.06] px-0.5 py-0.5 rounded-full'>
                         {messages?.length} Messages

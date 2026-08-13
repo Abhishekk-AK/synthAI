@@ -13,6 +13,9 @@ function ChatArea() {
   useEffect(()=>{
     const getMsg=async () => {
       if(selectedConversation) {
+        //clear old messages to prevent display prev conversation's m
+        dispatch(setMessages([]))
+        
         if(selectedConversation.title=="New Chat") {
           return
         }
