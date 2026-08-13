@@ -3,26 +3,43 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import sendMessage from '../features/sendMessage'
 import { createConversation } from '../features/createConversation'
-import { addConversation, setSelectedConversation } from '../redux/conversationSlice'
+import { addConversation, setConversationTitle, setSelectedConversation } from '../redux/conversationSlice'
 import { addMessage } from '../redux/messageSlice'
+import { updateConversation } from '../features/updateConversation'
 
 function ChatInput() {
   const [value,setValue]=useState("")
   const {selectedConversation}=useSelector(state=>state.conversation)
   const dispatch=useDispatch()
 
-  const handleCreateConversation=async () => {
-    const data=await createConversation()
-    dispatch(addConversation(data))
-    dispatch(setSelectedConversation(data))
-    return data._id
-  }
+  // const handleCreateConversation=async () => {
+  //   const data=await createConversation()
+  //   dispatch(addConversation(data))
+  //   dispatch(setSelectedConversation(data))
+  //   return data
+  // }
 
   const handleSendMessage=async () => {
-    const convId=selectedConversation ? selectedConversation?._id : handleCreateConversation()
+    let conversation=selectedConversation
+    if(!conversation) {
+      const data=await createConversation()
+      dispatch(setSelectedConversation(data))
+      dispatch(addConversation(data))
+      conversation=data
+    }
+
+    // const conv=handleCreateConversation()
+    // const convId=selectedConversation ? selectedConversation?._id : conv._id
+
+    if(conversation?.title=="New Chat") {
+      await updateConversation({id:conversation?._id,title:value})
+
+      dispatch(setConversationTitle({conversationId:conversation?._id,title:value.trim()}))
+    }
+
     const payload={
       prompt:value.trim(),
-      conversationId:convId
+      conversationId:conversation?._id
     }
     console.log(payload)
 
