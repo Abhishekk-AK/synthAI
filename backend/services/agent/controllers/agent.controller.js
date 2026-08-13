@@ -32,11 +32,15 @@ export const agent=async (req, res) => {
         await axios.post(`${process.env.CHAT_SERVICE_URL}/save-message`, {
             conversationId,
             role:"assistant",
-            content:response
+            content:response,
+            images:result.images,
         })
 
         //response sent to frontend
-        return res.status(200).json(response)
+        return res.status(200).json({
+            answer:result.aiResponse,
+            images:result.images,
+        })
 
     } catch (error) {
         return res.status(500).json({message:`agent error ${error}`})   

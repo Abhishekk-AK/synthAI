@@ -7,8 +7,23 @@ export const chatAgent=async (state) => {
 
     const history=await getMemory(state.conversationId)
 
+    //search agent redirect to chat agent
+    const searchContext=state.searchResults
+                        ? `Web Search Results:
+                           ${JSON.stringify(state.searchResults)}
+                           Answer the question based on the above search results only.`
+                        : ""
+
+
     const systemPrompt=`
     You are SynthAI, an intelligent AI assistant.
+
+    ${searchContext}
+
+    If searchContext exists:
+    - Use the search results to answer the user's question.
+    - Do not mention internal tools.
+
 
     Rules:
 
