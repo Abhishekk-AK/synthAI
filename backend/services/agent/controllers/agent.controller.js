@@ -33,16 +33,19 @@ export const agent=async (req, res) => {
             conversationId,
             role:"assistant",
             content:response,
-            images:result.images,
+            images:result?.images,
+            artifacts:result?.artifacts,
         })
 
         //response sent to frontend
         return res.status(200).json({
-            answer:result.aiResponse,
-            images:result.images,
+            answer:result?.aiResponse,
+            images:result?.images,
+            artifacts:result?.artifacts,
         })
 
     } catch (error) {
-        return res.status(500).json({message:`agent error ${error}`})   
+        return res.status(500).json({message:`agent error ${error}`}) 
+        console.log(error)  
     }
 }
