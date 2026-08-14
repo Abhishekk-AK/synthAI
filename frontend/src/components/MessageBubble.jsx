@@ -31,14 +31,14 @@ function MessageBubble({role,content,images}) {
             images.length>0 && (
               <div className='flex flex-wrap gap-3 mt-4'>
                 {
-                  images.map((img,i)=(
+                  images.map((img,i)=>(
                     <img
                       key={i}
                       src={img}
                       loading='lazy'
                       onClick={()=>setLightBox(img)}
                       onError={(e)=>e.currentTarget.remove()}
-                      className='w-40 h-28 rounded-xl object-cover border border-white/10 cursor-zoom-in hover:opacity-50 transition'
+                      className='w-40 h-28 rounded-xl object-cover border border-white/10 cursor-zoom-in hover:opacity-70 transition'
                     />
                   ))
                 }
@@ -81,19 +81,19 @@ function MessageBubble({role,content,images}) {
                 <a 
                   href={href}
                   target='_blank'
-                  rel='noreferer'
-                  className='px-3 py-2 text-left bg-white/10 border border-white/10'>
+                  rel='noreferrer'
+                  className='text-indigo-400 hover:text-indigo-300 underline inline-flex items-center gap-1'>
                     {children}
                     <ExternalLink size={14} />
                 </a>
               ),
               code:({className,children})=>{
                 const value=String(children).trim()
-                const language=className?.replace("language.","")
+                const language=className?.replace("language-","")
 
                 if(!className) {
                   return (
-                    <code className='px-1.5 py-0.5 rounded bg-white/10 text-violet-300'>
+                    <code className='px-1.5 py-0.5 rounded bg-white/10 text-indigo-300'>
                       {value}
                     </code>
                   )
