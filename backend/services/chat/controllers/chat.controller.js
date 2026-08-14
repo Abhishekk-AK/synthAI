@@ -38,7 +38,6 @@ export const getConversations=async (req, res) => {
 export const updateConversation=async (req, res) => {
     try {
         const {id, title}=req.body
-        console.log("userId", userId)
 
         const conversation=await Conversation.findByIdAndUpdate(id, {
             title
@@ -54,12 +53,13 @@ export const updateConversation=async (req, res) => {
 //saveMessage --> create and save a new message
 export const saveMessage=async (req, res) => {
     try {
-        const {conversationId, role, content, images}=req.body
+        const {conversationId, role, content, images, artifacts}=req.body
         const message=await Message.create({
             conversationId,
             content,
             role,
             images,
+            artifacts,
         })
 
         return res.status(200).json(message)
