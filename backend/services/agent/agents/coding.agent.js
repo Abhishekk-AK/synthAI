@@ -48,6 +48,13 @@ export const codingAgent=async (state) => {
             -Beautiful UI
             -Single Page unless user asks otherwise.
 
+            IMAGES
+            ====================
+
+            Always use real Unsplash images.
+            Never use placeholders.
+
+
             Return ONLY valid JSON.
             Schema:
             {
