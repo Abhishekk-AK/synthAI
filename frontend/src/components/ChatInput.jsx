@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import sendMessage from '../features/sendMessage'
 import { createConversation } from '../features/createConversation'
 import { addConversation, setConversationTitle, setSelectedConversation } from '../redux/conversationSlice'
-import { addMessage } from '../redux/messageSlice'
+import { addMessage, setArtifacts } from '../redux/messageSlice'
 import { updateConversation } from '../features/updateConversation'
 
 function ChatInput() {
@@ -48,6 +48,7 @@ function ChatInput() {
     dispatch(addMessage({role:"user",content:value.trim()}))
     setValue("")
     const data=await sendMessage(payload)
+    dispatch(setArtifacts(data?.artifacts || []))
     dispatch(addMessage({role:"assistant",content:data?.answer,images:data?.images}))
     console.log(data)
   }
