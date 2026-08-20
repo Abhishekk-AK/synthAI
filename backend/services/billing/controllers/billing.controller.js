@@ -1,6 +1,8 @@
 import { PLANS } from "../config/Plans.js"
 import razorpay from "../config/razorpay.js"
 import Payment from "../models/payment.model.js"
+import crypto from "crypto"
+import axios from "axios"
 
 export const createOrder=async (req,res) => {
     try {
@@ -23,8 +25,8 @@ export const createOrder=async (req,res) => {
             orderId:order.id,
             amount:selectedPlan.amount,
             credits:selectedPlan.credits,
-            plan:selectedPlan.plan,
-            currency:selectedPlan.currency,
+            plan,
+            currency:"INR",
             status:"created",
         })
 
@@ -35,7 +37,7 @@ export const createOrder=async (req,res) => {
     }
 }
 
-export const verifyPayment=async () => {
+export const verifyPayment=async (req,res) => {
     try {
         const {razorpay_order_id, razorpay_payment_id, razorpay_signature}=req.body
 

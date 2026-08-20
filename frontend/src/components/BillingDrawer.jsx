@@ -1,10 +1,11 @@
 import React from 'react'
-import { AnimatePresence, motion } from "motion/react"
+import { AnimatePresence, color, motion } from "motion/react"
 import { Crown, X } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { createOrder } from '../features/createOrder'
+import { verifyPayment } from '../features/verifyPayment'
 
-function BillingDrawer(open,onClose) {
+function BillingDrawer({open,onClose}) {
 
     const {userData}=useSelector(state=>state.user)
 
@@ -21,7 +22,17 @@ function BillingDrawer(open,onClose) {
                 order_id:data?.order?.id,
 
                 handler:async (response)=>{
-                    console.log(response)
+                    //console.log(response)
+                    try {
+                        const data=await verifyPayment(response)
+                        console.log(data)
+                    } catch (error) {
+                        console.log(error)
+                    }    
+                },
+                
+                theme:{
+                    color:"#4F46E5"
                 },
             }
 

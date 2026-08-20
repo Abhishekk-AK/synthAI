@@ -21,6 +21,13 @@ export const login=async (req, res) => {
         }
 
         const sessionId=crypto.randomUUID()
+
+        //set sessionId in redis to get during login
+        await redis.set(`user-session-${user?._id}`,
+            sessionId,
+            "EX",7*24*60*60
+        )
+
         await redis.set(`session-${sessionId}`, JSON.stringify({
             userId:user._id,
             name:user.name,
@@ -75,7 +82,11 @@ export const updateUserPayment=async (req,res) => {
 
         await user.save()
         
-        const sessionId=req.cookies?.session
+        //const sessionId=req.cookies?.session --> not gives session id on login
+
+        //get from redis
+        const sessionId=await redis.get(`user-session-${user?._id}`)
+
         await redis.set(`session-${sessionId}`, JSON.stringify({
             userId:user._id,
             name:user.name,
