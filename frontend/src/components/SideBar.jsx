@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { CloudCog, Coins, LogOut, MessageSquare, PanelLeftIcon, PanelRight, PenSquare, Plus, User } from "lucide-react"
+import { Coins, LogOut, MessageSquare, PanelLeftIcon, PanelRight, PenSquare, Plus, User } from "lucide-react"
 import { useDispatch, useSelector } from "react-redux"
 import { getConversations } from '../features/getConversations'
 import { addConversation, setConversations, setSelectedConversation } from '../redux/conversationSlice'
 import { createConversation } from "../features/createConversation"
 import logOut from '../features/logOut'
 import { setUserData } from '../redux/userSlice'
+import BillingDrawer from './BillingDrawer'
 
 function SideBar() {
 
   const [collapsed,setCollapsed]=useState(false)
   const dispatch=useDispatch()
   const [imageError,setImageError]=useState(false)
+  const [showBilling,setShowBilling]=useState(false)
   const {conversations,selectedConversation}=useSelector(state=>state.conversation)
   const {userData}=useSelector(state=>state.user)
 
@@ -205,7 +207,9 @@ function SideBar() {
                   </div>
                   <div className='flex gap-1'>
                     <button className='flex items-center justify-center w-7 h-7 border-none bg-transparent text-yellow-600 rounded-[7px] 
-                      cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150'>
+                      cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150'
+                      onClick={()=>setShowBilling(true)}
+                    >
                       <Coins size={16} />
                     </button>
                     <button className='flex items-center justify-center w-7 h-7 border-none bg-transparent text-slate-600 rounded-[7px] 
@@ -229,6 +233,12 @@ function SideBar() {
             }
           </div>
         </div>
+
+        <BillingDrawer
+          open={showBilling}
+          onClose={()=>setShowBilling(false)}
+        />
+
       </div>
     </>
   )
