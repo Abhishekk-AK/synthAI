@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import sendMessage from '../features/sendMessage'
 import { createConversation } from '../features/createConversation'
 import { addConversation, setConversationTitle, setSelectedConversation } from '../redux/conversationSlice'
-import { addMessage, setArtifacts } from '../redux/messageSlice'
+import { addMessage, setArtifacts, setIsLoading } from '../redux/messageSlice'
 import { updateConversation } from '../features/updateConversation'
 import { useRef } from 'react'
 
@@ -13,6 +13,7 @@ function ChatInput() {
   const [selectedAgent,setSelectedAgent]=useState("Auto")
   const [selectedFile,setselectedFile]=useState(null)
   const {selectedConversation}=useSelector(state=>state.conversation)
+  const {isLoading}=useSelector(state=>state.message)
   const dispatch=useDispatch()
   const fileRef=useRef(null)
 
@@ -24,6 +25,7 @@ function ChatInput() {
   // }
 
   const handleSendMessage=async () => {
+    dispatch(setIsLoading(true))
     let conversation=selectedConversation
     if(!conversation) {
       const data=await createConversation()
@@ -59,6 +61,7 @@ function ChatInput() {
     dispatch(addMessage({role:"user",content:value.trim()}))
     setValue("")
     const data=await sendMessage(formdata)
+    dispatch(setIsLoading(false))
     setselectedFile(null)
     dispatch(setArtifacts(data?.artifacts || []))
     dispatch(addMessage({role:"assistant",content:data?.answer,images:data?.images}))
@@ -154,7 +157,7 @@ function ChatInput() {
                   ? <FileText size={16} className='text-red-400' />
                   : selectedFile?.type.startsWith("image/") && <img src={URL.createObjectURL(selectedFile)} className='h-10 w-10 rounded-xl object-cover mt-3' />
                 } 
-                  <div>
+                  <div className='cursor-pointer'>
                     <p className='text-xs text-white'>
                       {selectedFile?.name}
                     </p>
@@ -208,7 +211,7 @@ function ChatInput() {
             </div>
             <div className='flex items-center justify-center'>
               <button 
-                disabled={!value}
+                disabled={!value && isLoading}
                 onClick={handleSendMessage}
                 className={`flex items-center justify-center w-8 h-8 rounded-lg border-none transition-colors duration-150 cursor-pointer
                   ${value.trim() ? "bg-linear-to-br from-indigo-500 to-violet-700 hover:opacity-90 text-white" 
