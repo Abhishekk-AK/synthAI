@@ -20,7 +20,7 @@ const storage=multer.diskStorage({
 
 //fiter to accept only image, pdf
 const fileFilter=(req,file,callback)=> {
-    if(file.mimetype=="application/pdf" || file.mimetype.statsWith("image/")) {
+    if(file.mimetype=="application/pdf" || file.mimetype.startsWith("image/")) {
         callback(null,true)
     }
     else {
