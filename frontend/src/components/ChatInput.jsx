@@ -52,7 +52,9 @@ function ChatInput() {
     formdata.append("prompt",value.trim())
     formdata.append("conversationId",conversation?._id)
     formdata.append("agent",selectedAgent.toLowerCase())
-    formdata.append("file",selectedFile)
+    if(selectedFile) {
+      formdata.append("file",selectedFile)
+    }
 
     dispatch(addMessage({role:"user",content:value.trim()}))
     setValue("")
