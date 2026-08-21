@@ -15,7 +15,7 @@ export const pdfRag=async (state) => {
         })
 
         //get all text of pdf
-        const result=pdf.getText()
+        const result=await pdf.getText()
 
         const text=result.text
 
@@ -34,7 +34,7 @@ export const pdfRag=async (state) => {
 
         const relevantDocs=await store.similaritySearch(state.prompt,5)
 
-        const context=relevantDocs.map(d=>d.pageContent).join("/n/n")
+        const context=relevantDocs.map(d=>d.pageContent).join("\n\n")
 
         const llm=await getModel("pdf-rag")
 
@@ -58,7 +58,7 @@ export const pdfRag=async (state) => {
             ),
         ]
 
-        const response=llm.invoke(messages)
+        const response=await llm.invoke(messages)
 
         await deductCredits(state.userId,"pdf")
 
@@ -68,10 +68,10 @@ export const pdfRag=async (state) => {
         }
 
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return {
             ...state,
-            aiResponse:`Failed to analyze PDF ${error}`
+            aiResponse:`Failed to analyze PDF right now.`
         }
 
     } finally {

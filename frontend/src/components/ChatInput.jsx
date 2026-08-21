@@ -6,12 +6,15 @@ import { createConversation } from '../features/createConversation'
 import { addConversation, setConversationTitle, setSelectedConversation } from '../redux/conversationSlice'
 import { addMessage, setArtifacts } from '../redux/messageSlice'
 import { updateConversation } from '../features/updateConversation'
+import { useRef } from 'react'
 
 function ChatInput() {
   const [value,setValue]=useState("")
   const [selectedAgent,setSelectedAgent]=useState("Auto")
+  const [selectedFile,setselectedFile]=useState(null)
   const {selectedConversation}=useSelector(state=>state.conversation)
   const dispatch=useDispatch()
+  const fileRef=useRef(null)
 
   // const handleCreateConversation=async () => {
   //   const data=await createConversation()
@@ -38,16 +41,22 @@ function ChatInput() {
       dispatch(setConversationTitle({conversationId:conversation?._id,title:value.trim()}))
     }
 
-    const payload={
-      prompt:value.trim(),
-      conversationId:conversation?._id,
-      agent:selectedAgent.toLowerCase()
-    }
-    console.log(payload)
+    // const payload={
+    //   prompt:value.trim(),
+    //   conversationId:conversation?._id,
+    //   agent:selectedAgent.toLowerCase()
+    // }
+    // console.log(payload)
+
+    const formdata=new FormData()
+    formdata.append("prompt",value.trim())
+    formdata.append("conversationId",conversation?._id)
+    formdata.append("agent",selectedAgent.toLowerCase())
+    formdata.append("file",selectedFile)
 
     dispatch(addMessage({role:"user",content:value.trim()}))
     setValue("")
-    const data=await sendMessage(payload)
+    const data=await sendMessage(formdata)
     dispatch(setArtifacts(data?.artifacts || []))
     dispatch(addMessage({role:"assistant",content:data?.answer,images:data?.images}))
     console.log(data)
@@ -143,8 +152,24 @@ function ChatInput() {
           />
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-1'>
-              <button className='flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:text-slate-400 
-              hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-150 bg-transparent cursor-pointer'>
+
+              <input 
+                type='file' 
+                accept='.pdf,image/*' 
+                hidden ref={fileRef} 
+                onChange={(e)=>{
+                  const file=e.target.files[0]
+                  if(file) {
+                    setselectedFile(file)
+                  }
+                }}
+              />
+
+              <button
+                onClick={()=>fileRef.current.click()}
+                className='flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:text-slate-400 
+                hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-150 bg-transparent cursor-pointer'
+              >
                 <Paperclip size={16} />
               </button>
               <button className='flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:text-slate-400 

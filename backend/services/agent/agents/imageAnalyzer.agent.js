@@ -1,6 +1,6 @@
-import { HumanMessage } from "@langchain/core/messages"
+import { HumanMessage, SystemMessage } from "@langchain/core/messages"
 import { getModel } from "../config/llmModels.js"
-import fs from "fs"
+import fs from "fs/promises"
 import { deductCredits } from "../utils/deductCredits.js"
 
 export const imageAnalyzer=async (state) => {
@@ -54,13 +54,13 @@ export const imageAnalyzer=async (state) => {
         }
 
     } catch (error) {
-        console.log(error)
+        console.error("Image analyzer error", error)
         return {
             ...state,
-            aiResponse:`Image analyzer response error ${error}`
+            aiResponse:"Unable to analyze the image right now. Please try again."
         } 
 
     } finally {
-        fs.unlink(state.file.path)
+        await fs.unlink(state.file.path)
     }
 }
