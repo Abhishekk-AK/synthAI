@@ -12,6 +12,20 @@ const app=express()
 app.use(express.json())
 app.use("/",router)
 
+//send global error from whole agent service app to fe
+//error handling middleware
+app.use((err,req,res,next)=>{
+    console.log(err)
+
+    //error set by dev(i.e. agentLimit error)
+    if(err.status) {
+        return res.status(err.status).json(err.data)
+    }
+
+    //controller error
+    return res.status(500).json({message:`agent error ${err}`})
+})
+
 app.get("/", (req, res)=> {
     res.json({message:'hello from agent'})
 })
