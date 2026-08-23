@@ -3,9 +3,12 @@ import axios from "axios"
 import { uploadToS3 } from "../utils/uploadToS3.js"
 import { getFromS3 } from "../utils/getFromS3.js"
 import { deductCredits } from "../utils/deductCredits.js"
+import { checkAgentLimit } from "../config/agentLimit.js"
 
 export const visionAgent=async (state) => {
     try {
+        await checkAgentLimit(state.userId,"image")
+
         const llm=await getModel("image")
         const res=await llm.invoke(
             `You are an elite AI Image prompt engineer.
@@ -39,7 +42,7 @@ export const visionAgent=async (state) => {
         const imageUrl=`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
 
         const imageRes=await axios.get(imageUrl,{responseType:"arraybuffer"})
-        console.log(imageRes)
+        //console.log(imageRes)
 
         const buffer=Buffer.from(imageRes?.data)
         const filename=`image-${Date.now()}.png`
@@ -52,21 +55,18 @@ export const visionAgent=async (state) => {
 
         return {
             ...state,
-            aiResponse:`
-            ![Generated Image](${downloadUrl})
+            aiResponse:`![Generated Image](${downloadUrl})
 
-            🖼️ [Download Image](${downloadUrl})
+🖼️ [Download Image](${downloadUrl})
 
-            ⌛ Link expires in 10 minutes.
-            `
+⌛ Link expires in 10 minutes.`
         }
 
     } catch (error) {
+        console.error(error)
         return {
             ...state,
-            aiResponse:`
-            Failed to generate image.
-            `
+            aiResponse:error?.data?.message || `Failed to generate Image.`
         }
     }
 }
