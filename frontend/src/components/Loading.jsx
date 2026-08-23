@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "motion/react"
 import { useEffect, useState } from "react"
 
 function Loading() {
-    const Thinking_Labels=["Thinking", "Analyzing", "Rasoning", "Generating"]
+    const Thinking_Labels=["Thinking", "Analyzing", "Reasoning", "Generating"]
     const [labelIndex,setLabelIndex]=useState(0)
 
     useEffect(()=>{
