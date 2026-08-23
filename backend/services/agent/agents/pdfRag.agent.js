@@ -5,9 +5,12 @@ import { vectorStore } from "../config/vectorDb.js"
 import { getModel } from "../config/llmModels.js"
 import { HumanMessage, SystemMessage } from "@langchain/core/messages"
 import { deductCredits } from "../utils/deductCredits.js"
+import { checkAgentLimit } from "../config/agentLimit.js"
 
 export const pdfRag=async (state) => {
     try {
+        await checkAgentLimit(state.userId,"pdf")
+
         const buffer=fs.readFileSync(state.file.path)
 
         const pdf=new PDFParse({
@@ -71,7 +74,7 @@ export const pdfRag=async (state) => {
         console.error(error)
         return {
             ...state,
-            aiResponse:`Failed to analyze PDF right now.`
+            aiResponse:error?.data?.message || `Failed to analyze PDF.`
         }
 
     } finally {

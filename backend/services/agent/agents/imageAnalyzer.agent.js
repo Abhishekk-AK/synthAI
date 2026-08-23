@@ -2,9 +2,12 @@ import { HumanMessage, SystemMessage } from "@langchain/core/messages"
 import { getModel } from "../config/llmModels.js"
 import fs from "fs/promises"
 import { deductCredits } from "../utils/deductCredits.js"
+import { checkAgentLimit } from "../config/agentLimit.js"
 
 export const imageAnalyzer=async (state) => {
     try {
+        await checkAgentLimit(state.userId,"image")
+
         const llm=await getModel("imageAnalyzer")
         
         //base 64 image
@@ -57,7 +60,7 @@ export const imageAnalyzer=async (state) => {
         console.error("Image analyzer error", error)
         return {
             ...state,
-            aiResponse:"Unable to analyze the image right now. Please try again."
+            aiResponse:error?.data?.message || "Unable to analyze the image right now. Please try again."
         } 
 
     } finally {
