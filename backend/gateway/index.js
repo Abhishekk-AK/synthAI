@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser"
 import protect from "./middleware/auth.middleware.js"
 import getCurrentUser from "./controller/user.controller.js"
 import { proxyWithHeader } from "./utils/proxyWithHeader.js"
+import morgan from "morgan"
 
 const port=process.env.PORT
 
@@ -16,6 +17,7 @@ app.use(cors({
     credentials:true
 }))
 
+app.use(morgan("dev"))
 app.use(cookieParser())
 
 
