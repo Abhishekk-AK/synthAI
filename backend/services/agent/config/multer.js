@@ -2,7 +2,7 @@ import path from "path"
 import fs from "fs"
 import multer from "multer"
 
-const uploadDir=path.resolve("./temp")
+const uploadDir=path.resolve("./config/temp")
 //console.log(uploadDir)
 
 if(!fs.existsSync(uploadDir)) {
