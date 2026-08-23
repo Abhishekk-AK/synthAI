@@ -54,7 +54,7 @@ function MessageBubble({role,content,images}) {
               h2:({children})=>(
                 <h2 className='text-xl font-semibold mt-4 mb-2'>{children}</h2>
               ),
-              h1:({children})=>(
+              h3:({children})=>(
                 <h3 className='text-lg font-semibold mt-3 mb-2'>{children}</h3>
               ),
               p:({children})=>(
