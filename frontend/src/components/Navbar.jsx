@@ -8,7 +8,7 @@ function Navbar() {
     return (
         <>
             {selectedConversation &&
-                <div className='h-14 flex items-center px-5 gap-2.5 border-b border-white/[0.06] bg-[#0d0f14]'>
+                <div className='h-14 flex items-center pl-14 pr-5 lg:px-5 gap-2.5 border-b border-white/[0.06] bg-[#0d0f14]'>
                     <div className='flex items-center justify-center w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20'>
                         <MessagesSquare size={13} className='text-indigo-400' />
                     </div>
