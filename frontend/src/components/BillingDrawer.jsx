@@ -90,8 +90,8 @@ function BillingDrawer({open,onClose}) {
                                         <p className='text-sm text-slate-400'>
                                             Current Plan
                                         </p>
-                                        <h3 className='text-xl text-white font-bold'>
-                                            {userData?.plan || "free"}
+                                        <h3 className='text-xl text-white font-bold capitalize'>
+                                            {userData?.plan || "Free"}
                                         </h3>
                                     </div>
                                     <Crown size={18} className='text-yellow-400' />
