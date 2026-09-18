@@ -34,7 +34,7 @@ function Home() {
 
   return (
     <>
-      <div className='h-screen flex bg-[#0d0f14] text-white overflow-hidden'>
+      <div className='h-screen min-w-0 flex bg-[#0d0f14] text-white overflow-hidden'>
 
       <SideBar />
       <ChatArea />
@@ -53,7 +53,8 @@ function Home() {
                 </p>
             </div>
 
-            <button className='w-full flex items-center justify-center gap-3 py-[11px] text-sm font-medium rounded-xl text-black/90 bg-white hover:bg-gray-200 transition-all duration-150 cursor-pointer'
+            <button className='w-full flex items-center justify-center gap-3 py-[11px] text-sm font-medium rounded-xl
+            text-black/90 bg-white hover:bg-gray-200 transition-all duration-150 cursor-pointer'
                 onClick={googleLogin}>
                 <FcGoogle size={15} />
                 Continue with Google
