@@ -175,7 +175,7 @@ jobs:
       - name: build frontend
         run: |
           cd frontend
-          npm insatll
+          npm install
           npm run build
 
       - name: aws configure
