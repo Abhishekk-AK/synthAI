@@ -44,7 +44,7 @@ export const login=async (req, res) => {
             // secure:false,
             // sameSite:"strict",
             secure:true,
-            samesite:"none",
+            sameSite:"none",
             maxAge:7*24*60*60*1000,
         })
 
