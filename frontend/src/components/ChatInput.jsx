@@ -220,7 +220,7 @@ function ChatInput() {
           }
 
           <textarea
-            placeholder='Ask me Anything...'
+            placeholder='Ask Anything...'
             rows={3}
             onChange={(e)=>setValue(e.target.value)}
             value={value}
